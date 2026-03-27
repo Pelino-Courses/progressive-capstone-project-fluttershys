@@ -40,5 +40,18 @@ I would start the wireframing earlier. We spent more time on problem definition 
 - **Figma:** Used for wireframe iteration (digital version of hand sketches)
 - **GitHub:** Version control for all submissions
 
+  **Student Name:** Dorine MAHORO IRAGENA
+
+  **Personal Reflection**
+
+Working on SukaAPP project as a team has been a valuable and engaging experience. Throughout the process, we maintained good communication and supported each other in different parts of the project. We shared ideas openly and made decisions together, which helped us stay aligned with our goals and complete tasks efficiently.
+
+I contributed to the research, problem identification, and documentation, while also following closely the development of the Flutter UI. This allowed me to understand how different components of the project come together, from identifying user needs to designing practical solutions. Collaborating as a team helped me improve my ability to listen, share ideas, and build on feedback.
+
+From a technical perspective, I gained a better understanding of Flutter widgets and how they are used to create user-friendly interfaces. Observing and discussing the UI design process helped me learn about layout structure, navigation, and how to keep an app simple and efficient.
+
+Overall, this project strengthened my teamwork, communication, and problem-solving skills. It also increased my confidence in working on real-world app development projects and applying both research and technical knowledge in a practical way.
+
+
 *As required by academic integrity policy: we used AI tools to assist with documentation structure and writing quality, not to generate research findings or original concepts. All ideas, problem statements, and app features are team-developed.*
 
