@@ -10,7 +10,7 @@
 **App Name:** SukaApp  
 **Tagline:** *"Your market, in your hands*  
 **Platform:** Flutter (Android-first, iOS compatible)  
-**Target Market:** Kigali, Rwanda — expandable to East Africa  
+**Target Market:** Kigali, Rwanda & expandable to East Africa  
 
 ## 2. Problem-Solution Fit
 
