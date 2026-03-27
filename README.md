@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# 🛒 SukaApp — *Isoko ryawe mu nteke zawe*
+# 🛒 SukaApp — *Isoko ryawe*
 ### Your Market, In Your Hands
 
 > A Flutter marketplace app connecting Kigali's informal vendors with local buyers.  
@@ -53,7 +53,6 @@ sukaapp/
 | Phase 3 | 6–7 | Integration & localization |
 | Phase 4 | 8–9 | Testing & showcase |
 
----
 
 ## 👥 Team / Itsinda
 
@@ -63,7 +62,6 @@ sukaapp/
 | Member B | UX/Research Lead |
 | Member C | Backend & Data |
 
----
 
 ## 🔧 Setup
 
@@ -76,8 +74,6 @@ flutter run
 
 **Requirements:** Flutter 3.x, Dart 3.x, Android SDK 21+
 
----
-
 ## 🤖 AI Tools Disclosure
 Claude AI (Anthropic) was used to help structure and draft documentation files. All field research, app concepts, and design decisions are original team work. Per course policy, AI tool usage is fully disclosed.
 
@@ -86,4 +82,4 @@ Claude AI (Anthropic) was used to help structure and draft documentation files. 
 * We finish together. 🇷🇼*
 =======
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23254322)
->>>>>>> c6daa3324bdd87b27388a0009939e1aee1126ea9
+>>>>>>>
