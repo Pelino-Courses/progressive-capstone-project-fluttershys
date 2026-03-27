@@ -7,13 +7,13 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; padding: 30px; }
   h1 { text-align: center; color: #1a1a2e; font-size: 26px; margin-bottom: 6px; }
-  .subtitle { text-align: center; color: #555; margin-bottom: 36px; font-size: 14px; }
+  .subtitle { text-align: center; color: #255; margin-bottom: 36px; font-size: 14px; }
 
   .screens-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
-    max-width: 1300px;
+    gap: 27px;
+    max-width: 1302px;
     margin: 0 auto;
   }
 
@@ -26,12 +26,12 @@
 
   .screen-label {
     font-weight: 700;
-    color: #1a1a2e;
-    font-size: 13px;
+    color: #1b5e2b2e;
+    font-size: 12px;
     text-align: center;
   }
   .screen-sublabel {
-    font-size: 11px;
+    font-size: 12px;
     color: #777;
     text-align: center;
     margin-top: -8px;
@@ -66,12 +66,12 @@
 
   .status-bar {
     height: 24px;
-    background: #1a1a2e;
+    background: #2a1a2e;
     flex-shrink: 0;
   }
 
   .app-bar {
-    background: #2ecc71;
+    background: #2ece71;
     padding: 8px 12px;
     display: flex;
     align-items: center;
@@ -369,7 +369,7 @@
 
   <!-- Screen 1: Home -->
   <div class="screen-wrap">
-    <div class="screen-label">Screen 1: Ahabanza / Home</div>
+    <div class="screen-label">Screen 1: Home</div>
     <div class="screen-sublabel">Browse & discover products</div>
     <div class="phone">
       <div class="status-bar"></div>
@@ -380,19 +380,19 @@
       <div class="screen-content">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          Shakisha ibicuruzwa...
+          Search product...
         </div>
         <div class="category-row">
-          <div class="cat-chip active">Byose</div>
-          <div class="cat-chip">🥬 Ibiterwa</div>
-          <div class="cat-chip">🍖 Inyama</div>
-          <div class="cat-chip">👕 Imyenda</div>
+          <div class="cat-chip active">All</div>
+          <div class="cat-chip">🥬 Vegetables</div>
+          <div class="cat-chip">🍖 Meat</div>
+          <div class="cat-chip">👕 Clothing</div>
         </div>
-        <div class="section-title">Ibicuruzwa biri hafi / Nearby Items</div>
+        <div class="section-title">Near by Items</div>
         <div class="product-grid">
           <div class="product-card">
             <div class="product-img" style="background:#e8f5e9;">🍅</div>
-            <div class="product-name">Ingagi (Tomato)</div>
+            <div class="product-name">Tomato</div>
             <div class="product-price">200 RWF/kg</div>
             <div class="product-seller">
               <span class="stock-dot" style="background:#2ecc71;"></span>
@@ -401,26 +401,26 @@
           </div>
           <div class="product-card">
             <div class="product-img" style="background:#fff8e1;">🥑</div>
-            <div class="product-name">Avoka (Avocado)</div>
-            <div class="product-price">500 RWF/pc</div>
+            <div class="product-name">Avocado</div>
+            <div class="product-price">300 RWF/pc</div>
             <div class="product-seller">
               <span class="stock-dot" style="background:#f39c12;"></span>
-              Jean Pierre • ⭐4.5
+              Jean claude • ⭐4.5
             </div>
           </div>
           <div class="product-card">
             <div class="product-img" style="background:#fce4ec;">🧅</div>
-            <div class="product-name">Kyanzi (Onion)</div>
-            <div class="product-price">300 RWF/kg</div>
+            <div class="product-name">Onion</div>
+            <div class="product-price">100 RWF/kg</div>
             <div class="product-seller">
               <span class="stock-dot" style="background:#2ecc71;"></span>
-              Alice K. • ⭐4.9
+              Aline • ⭐4.9
             </div>
           </div>
           <div class="product-card">
             <div class="product-img" style="background:#f3e5f5;">🧴</div>
-            <div class="product-name">Amavuta (Oil)</div>
-            <div class="product-price">2,500 RWF/L</div>
+            <div class="product-name">Oil</div>
+            <div class="product-price">4,500 RWF/L</div>
             <div class="product-seller">
               <span class="stock-dot" style="background:#e74c3c;"></span>
               Kimura Shop • ⭐4.2
@@ -433,48 +433,48 @@
 
   <!-- Screen 2: Seller Dashboard -->
   <div class="screen-wrap">
-    <div class="screen-label">Screen 2: Icyumba cy'Umucuruzi</div>
+    <div class="screen-label">Screen 2: Seller Dashboard</div>
     <div class="screen-sublabel">Seller dashboard & stock mgmt</div>
     <div class="phone">
       <div class="status-bar"></div>
       <div class="app-bar">
-        <div class="app-bar-title">📊 Icyumba Cyanjye</div>
+        <div class="app-bar-title">📊 My Dashboard</div>
         <div class="app-bar-icon"></div>
       </div>
       <div class="screen-content">
         <div class="stats-row">
           <div class="stat-card">
             <div class="stat-num">12</div>
-            <div class="stat-label">Ibicuruzwa Listed</div>
+            <div class="stat-label">Goods Listed</div>
           </div>
           <div class="stat-card">
             <div class="stat-num">4.8⭐</div>
-            <div class="stat-label">Amanota Yanjye</div>
+            <div class="stat-label">Average Rating</div>
           </div>
           <div class="stat-card">
             <div class="stat-num">3</div>
-            <div class="stat-label">Reservations Zitegereje</div>
+            <div class="stat-label">Reservations awaiting</div>
           </div>
           <div class="stat-card">
             <div class="stat-num">47k</div>
-            <div class="stat-label">RWF Iki cyumweru</div>
+            <div class="stat-label">RWF for this period</div>
           </div>
         </div>
 
-        <div class="section-title">Ibicuruzwa Byanjye / My Listings</div>
+        <div class="section-title"> My Listings</div>
 
         <div class="listing-item">
           <div class="listing-emoji">🍅</div>
           <div class="listing-info">
-            <div class="listing-name">Ingagi — 200 RWF/kg</div>
-            <div class="listing-price">Stock: 15 kg • 🟢 Available</div>
+            <div class="listing-name">Tomato — 200 RWF/kg</div>
+            <div class="listing-price">Stock: 10 kg • 🟢 Available</div>
           </div>
           <div class="toggle-box"></div>
         </div>
         <div class="listing-item">
           <div class="listing-emoji">🥑</div>
           <div class="listing-info">
-            <div class="listing-name">Avoka — 500 RWF</div>
+            <div class="listing-name">Avocado — 300 RWF/pc</div>
             <div class="listing-price">Stock: 3 pc • 🟡 Low</div>
           </div>
           <div class="toggle-box" style="background:#ccc;"></div>
@@ -482,51 +482,51 @@
         <div class="listing-item">
           <div class="listing-emoji">🧅</div>
           <div class="listing-info">
-            <div class="listing-name">Kyanzi — 300 RWF/kg</div>
+            <div class="listing-name">Onion — 100 RWF/kg</div>
             <div class="listing-price">Stock: 0 kg • 🔴 Out</div>
           </div>
           <div class="toggle-box" style="background:#e74c3c;"></div>
         </div>
 
-        <div class="add-btn">+ Ongeraho Igicuruzwa</div>
+        <div class="add-btn">+ Add Product</div>
       </div>
     </div>
   </div>
 
   <!-- Screen 3: Product Detail -->
   <div class="screen-wrap">
-    <div class="screen-label">Screen 3: Inyangamugayo / Detail</div>
+    <div class="screen-label">Screen 3: Detail</div>
     <div class="screen-sublabel">Product detail + reserve</div>
     <div class="phone">
       <div class="status-bar"></div>
       <div class="app-bar">
-        <div class="app-bar-title">← Ingagi (Tomato)</div>
+        <div class="app-bar-title">←Tomato</div>
         <div class="app-bar-icon"></div>
       </div>
       <div class="screen-content">
         <div class="product-hero" style="background:#e8f5e9;">🍅</div>
         <div class="detail-row">
           <div>
-            <div class="detail-name">Ingagi (Tomato)</div>
+            <div class="detail-name">Tomato</div>
             <div style="font-size:9px; color:#888;">Kimironko Market, Stall A12</div>
           </div>
           <div class="detail-price">200 RWF/kg</div>
         </div>
 
         <div style="font-size:9px; color:#555; line-height:1.5;">
-          Ingagi nziza zituruka i Musanze. Zifite imitsi myiza kandi nta bushyamirane. Azanywe buri munsi saa mbiri.
+    
         </div>
 
         <div style="font-size:9px; color:#888;">
           <span class="stock-dot" style="background:#2ecc71; display:inline-block; width:8px; height:8px; border-radius:50; margin-right:3px;"></span>
-          Stock: 15 kg • Igihe cyo gufunga: 6:00 PM
+          Stock: 15 kg • Close <Time>6:00 PM</Time>
         </div>
 
         <div class="seller-row">
           <div class="seller-avatar">👩</div>
           <div>
-            <div class="seller-name">Mama Grace Uwimana</div>
-            <div class="seller-rating">⭐⭐⭐⭐⭐ 4.8 (52 amanota)</div>
+            <div class="seller-name">Mama Grace</div>
+            <div class="seller-rating">⭐⭐⭐⭐⭐ 4.8 (52 marks)</div>
           </div>
           <div style="margin-left:auto; background:#e8f5e9; color:#1b5e20; font-size:8px; padding:3px 7px; border-radius:10px; font-weight:700;">✓ Verified</div>
         </div>
@@ -542,15 +542,15 @@
           </div>
         </div>
 
-        <div class="reserve-btn">🔒 Bika (Reserve) — 400 RWF</div>
-        <div class="momo-btn">📱 Ishyura na MoMo</div>
+        <div class="reserve-btn">🔒Reserve — 400 RWF</div>
+        <div class="momo-btn">📱 pay by MoMo</div>
       </div>
     </div>
   </div>
 
   <!-- Screen 4: Checkout -->
   <div class="screen-wrap">
-    <div class="screen-label">Screen 4: Kwishyura / Checkout</div>
+    <div class="screen-label">Screen 4: Checkout</div>
     <div class="screen-sublabel">MoMo mobile money payment</div>
     <div class="phone">
       <div class="status-bar"></div>
@@ -563,15 +563,15 @@
         <div class="order-summary">
           <div style="font-size:10px; font-weight:700; margin-bottom:6px; color:#1a1a2e;">📋 Ibyo warengeje / Order Summary</div>
           <div class="order-row">
-            <span>🍅 Ingagi (2 kg × 200 RWF)</span>
+            <span>🍅 Tomato (2 kg × 200 RWF)</span>
             <span>400 RWF</span>
           </div>
           <div class="order-row">
-            <span>Serivisi (Service fee)</span>
+            <span>Service fee</span>
             <span>20 RWF</span>
           </div>
           <div class="order-total">
-            <span>Igiteranyo / Total</span>
+            <span>Total</span>
             <span>420 RWF</span>
           </div>
         </div>
@@ -582,10 +582,10 @@
         <div style="background:#fff8e1; border-radius:8px; padding:7px 10px; border: 1px solid #f39c12;">
           <div style="font-size:9px; color:#7b5b00; font-weight:600;">📱 Uburyo bwo kwishyura:</div>
           <div style="font-size:8px; color:#7b5b00; margin-top:3px; line-height:1.5;">
-            1. Kanda "Ishyura" hasi<br>
-            2. Uzakira SMS ya MoMo<br>
-            3. Injiza PIN yawe<br>
-            4. Kwishyura bizarangira!
+            1. Press "pay" bottom<br>
+            2. Send SMS to MoMo<br>
+            3. Enter your PIN<br>
+            4. Confirm payment!
           </div>
         </div>
 
@@ -597,10 +597,10 @@
           </div>
         </div>
 
-        <div class="pay-btn">📱 ISHYURA 420 RWF</div>
+        <div class="pay-btn">📱 PAY 420 RWF</div>
 
         <div style="font-size:8px; color:#999; text-align:center;">
-          🔒 Kwishyura bihobora / Secure payment
+          🔒 Secure payment
         </div>
       </div>
     </div>
@@ -610,31 +610,31 @@
 
 <!-- Legend -->
 <div class="legend">
-  <h3>🗺️ User Flow: Buyer Journey / Inzira y'Umukiriya</h3>
+  <h3>🗺️ User Flow: Buyer Journey</h3>
   <div class="legend-grid">
     <div class="legend-item">
       <div class="legend-dot" style="background:#2ecc71;"></div>
-      Screen 1 → Browse & search products (Shakisha ibicuruzwa)
+      Screen 1 → Browse & search products
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="background:#3498db;"></div>
-      Screen 3 → Tap product to see detail & seller rating (Reba amakuru)
+      Screen 3 → Tap product to see detail & seller rating
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="background:#f39c12;"></div>
-      Screen 4 → Pay via MoMo or reserve for pickup (Bika/Ishyura)
+      Screen 4 → Pay via MoMo or reserve for pickup 
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="background:#9b59b6;"></div>
-      Screen 2 → Seller manages listings & sees orders (Gucunga ibicuruzwa)
+      Screen 2 → Seller manages listings & sees orders 
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="background:#e74c3c;"></div>
-      🔴 Red stock = Out of stock (Birangiye)
+      🔴 Red stock = Out of stock 
     </div>
     <div class="legend-item">
       <div class="legend-dot" style="background:#f39c12;"></div>
-      🟡 Yellow stock = Low stock — reserve fast! (Biragabanuka)
+      🟡 Yellow stock = Low stock — reserve fast!
     </div>
   </div>
 </div>
