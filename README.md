@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛒 SukaApp — *Isoko ryawe mu nteke zawe*
 ### Your Market, In Your Hands
 
@@ -83,3 +84,6 @@ Claude AI (Anthropic) was used to help structure and draft documentation files. 
 ---
 
 * We finish together. 🇷🇼*
+=======
+[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23254322)
+>>>>>>> c6daa3324bdd87b27388a0009939e1aee1126ea9
