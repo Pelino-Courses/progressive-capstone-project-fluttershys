@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# 🛒 SukaApp — *Your markeetplace*
+# 🛒 SukaApp — *Your marketplace*
 ### Your Market, In Your Hands
 
 > A Flutter marketplace app connecting Kigali's informal vendors with local buyers.  
