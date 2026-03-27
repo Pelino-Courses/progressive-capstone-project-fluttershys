@@ -74,8 +74,8 @@ flutter run
 
 **Requirements:** Flutter 3.x, Dart 3.x, Android SDK 21+
 
-## 🤖 AI Tools Disclosure
-Claude AI (Anthropic) was used to help structure and draft documentation files. All field research, app concepts, and design decisions are original team work. Per course policy, AI tool usage is fully disclosed.
+## 🤖  Tools Disclosure
+AI was used to help structure and draft documentation files. All field research, app concepts, and design decisions are original team work. Per course policy, AI tool usage is fully disclosed.
 
 ---
 
