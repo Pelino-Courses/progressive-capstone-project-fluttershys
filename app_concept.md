@@ -54,7 +54,7 @@ SukaApp creates a **lightweight, offline-capable digital marketplace** connectin
 **Problem it solves:** Buyers walk 20+ minutes only to find items unavailable  
 **Implementation:** Sellers list items with photo (camera capture), price, and quantity. Buyers browse by category ( Vegetables, Meat, Clothing, etc.)  
 **Flutter widgets used:** `GridView`, `Card`, `SearchDelegate`, `Image.file`  
-**Constraint addressed:** Low data mode — images compressed to <50KB, text-first loading
+**Constraint addressed:** Low data mode, images compressed to <50KB, text-first loading
 
 ### Feature 2 — Live Pricing & Availability
 **Problem it solves:** Price capacity and wasted trips for out-of-stock items  
@@ -72,7 +72,7 @@ SukaApp creates a **lightweight, offline-capable digital marketplace** connectin
 **Problem it solves:** Goods sold out before buyer arrives  
 **Implementation:** Buyer taps"Reserve" seller gets notification, item held for 2 hours. Simple confirm/decline flow.  
 **Flutter widgets used:** `ElevatedButton`, `Dialog`, `local_notifications` package, `CountdownTimer`  
-**Constraint addressed:** Communication constraint — replaces informal phone calls
+**Constraint addressed:** Communication constraint replaces informal phone calls
 
 ### Feature 5 — Mobile Money Payment
 **Problem it solves:** Cash-only friction and transaction recording  
@@ -119,7 +119,6 @@ SukaApp/
 
 ## 7. Innovation Statement
 
-SukaApp is **not** a copy of Jumia or Kilimall. Those platforms target formal retailers with high inventory and digital infrastructure. SukaApp specifically targets **informal market vendors**  the 80%+ of Kigali commerce that is offline today with tools designed for their reality: low data, basic phones, Kinyarwanda first, and MoMo payments. The trust rating system is specifically designed around Rwanda's existing "social vouching" culture, making digital trust feel as natural as asking a neighbor for a recommendation.
+SukaApp is **not** a copy of Jumia or Kilimall. Those platforms target formal retailers with high inventory and digital infrastructure. SukaApp specifically targets **informal market vendors**  the 80%+ of Kigali commerce that is offline today with tools designed for their reality: low data, basic phones,and MoMo payments. The trust rating system is specifically designed around Rwanda's existing "social vouching" culture, making digital trust feel as natural as asking a neighbor for a recommendation.
 
-
-*This concept was developed by the team — it is not a copy of an existing product.*
+*This concept was developed by the team*
