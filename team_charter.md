@@ -1,11 +1,9 @@
 # Team Charter — MarketConnect Team
 ## SukaApp Progressive Project
 
-**Date Created:** March 23, 2026  
+**Date Created:** March 27, 2026  
 **Review Date:** End of Week 3  
 **Course:** Flutter Widgets & UI Design  
-
----
 
 ## 1. Our Team
 
@@ -17,7 +15,6 @@
 
 *Roles will rotate partially in Phase 2 to ensure everyone learns all layers.*
 
----
 
 ## 2. Working Protocols
 
@@ -46,7 +43,6 @@
 3. If still unresolved → escalate to course instructor
 4. Rule: **No silent disagreement** — if you disagree, speak. Silence = consent.
 
----
 
 ## 3. Project Roadmap
 
@@ -62,11 +58,9 @@
 | **8** | Phase 4 — Testing | User testing with 3 real vendors, bug fixes, performance | All |
 | **9** | Phase 4 — Showcase | Final demo, presentation slides, video walkthrough | All |
 
----
 
 ## 4. GitHub Repository Structure
 
-```
 sukaapp/
 ├── lib/                    # Flutter source code
 ├── docs/
@@ -81,9 +75,6 @@ sukaapp/
 ├── test/                   # Widget & unit tests
 ├── pubspec.yaml
 └── README.md
-```
-
----
 
 ## 5. Success Criteria for Phase 4 Showcase
 
@@ -130,4 +121,4 @@ By contributing to this repository, all team members agree to:
 - Meet deadlines or communicate blockers **at least 24 hours early**
 
 *We finish together.*  
-**MarketConnect Team — Kigali, May 2026**
+**MarketConnect Team  Kigali, May 2026**
