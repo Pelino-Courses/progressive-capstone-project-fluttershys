@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 🛒 SukaApp — *Your marketplace*
+=======
+# 🛒 SukaApp — *Isoko ryawe mu nteke zawe*
+>>>>>>> e3034c9 (mini-capstone-part-a-d)
 ### Your Market, In Your Hands
 
 > A Flutter marketplace app connecting Kigali's informal vendors with local buyers.  
@@ -37,6 +41,7 @@ sukaapp/
 │   └── sukaapp_wireframes.html   # Interactive wireframe designs
 ├── test/
 ├── pubspec.yaml
+├── DESIGN.md                     # Mini-Capstone screen mockup plan
 └── README.md
 ```
 
@@ -70,9 +75,28 @@ flutter run
 
 **Requirements:** Flutter 3.x, Dart 3.x, Android SDK 21+
 
+<<<<<<< HEAD
 ## 🤖  Tools Disclosure
 AI was used to help structure and draft documentation files. All field research, app concepts, and design decisions are original team work.
 
 * We finish together. 🇷🇼*
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=23254322)
 >>>>>>>
+=======
+---
+
+## 📐 Design Documentation
+- `docs/DESIGN.md` contains the Mini-Capstone screen mockup plan and UI decisions.
+- `wireframes/sukaapp_wireframes.html` contains the current wireframe prototypes.
+- `docs/ASSIGNMENT.md` contains the assignment summary, submission instructions, and checklist.
+- Project demo video: https://www.youtube.com/watch?v=gxVwPk0cImU
+
+---
+
+## 🤖 AI Tools Disclosure
+Claude AI (Anthropic) was used to help structure and draft documentation files. All field research, app concepts, and design decisions are original team work. Per course policy, AI tool usage is fully disclosed.
+
+---
+
+* We finish together. 🇷🇼*
+>>>>>>> e3034c9 (mini-capstone-part-a-d)

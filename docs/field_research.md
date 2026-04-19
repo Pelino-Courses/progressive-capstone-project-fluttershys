@@ -1,5 +1,9 @@
 # Field Research Report — Marketplace App
+<<<<<<< HEAD:field_research.md
 **Date:** March 24, 2026  
+=======
+**Date:** March 27, 2026  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
 **Location:** Kigali, Rwanda (Kimironko Market & Surrounding Area)  
 **Research Lead:** Team MarketConnect  
 
@@ -8,21 +12,29 @@
 This field research documents real observations and interviews conducted independently by each team member.
 
 ## Member 1 — Research Session
-**Timestamp:** 2026-03-23 | 08:30 – 09:00 AM  
+**Timestamp:** 2026-03-27 | 08:30 – 09:00 AM  
 **Location:** Kimironko Market, Section A (Vegetables & Fruits)
 
 ### Observations
 1. **Friction Point 1 — Price Discovery**  
-   A customer spent 12 minutes walking between 6 different stalls asking for tomato prices before buying.  
+   A customer spent 12-15 minutes walking between 6 different shops asking for tomato prices before buying.  
    > *"I don't know if the price is good — I have to walk around first before I find where it's fair."*
 
+<<<<<<< HEAD:field_research.md
 2. **Friction Point 2 -Payment Methods**  
+=======
+2. **Friction Point 2 — Payment Methods**  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
    Vendors reject mobile money under 2,000 RWF because of perceived transaction delay.  
    > *"MoMo is good but it takes too long when I have many customers."*  
   
 
 3. **Friction Point 3 — Stock Visibility**  
+<<<<<<< HEAD:field_research.md
    Buyers walked 20 minutes to find ripe avocados only to find them sold out.  
+=======
+   Buyers walked 20 minutes to find ripe bananas only to find them sold out.  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
    > *"I was told there were ripe ones in the back — I came for nothing."*  
   
 
@@ -32,12 +44,16 @@ This field research documents real observations and interviews conducted indepen
    
 
 5. **Friction Point 5 — Wait Times**  
+<<<<<<< HEAD:field_research.md
    Lines form at popular stalls while adjacent stalls sit empty.  
+=======
+   Lines form at popular shops while adjacent shop sit empty.  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
    > *"This person is always busy but I think people don't know the others also have good products."*  
 
 
 ## Member 2 — Research Session
-**Timestamp:** 2026-03-23 | 09:15 – 09:45 AM  
+**Timestamp:** 2026-03-27 | 09:30 – 10:15 AM  
 **Location:** Nyamirambo Roadside Vendors
 
 ### Observations
@@ -47,9 +63,13 @@ This field research documents real observations and interviews conducted indepen
 
 2. **Friction Point 2 — No Pre-ordering**  
    Customers unable to reserve items for later pickup.  
+<<<<<<< HEAD:field_research.md
    > *"I was coming at 9am but the goods were gone. Taken by my neighbor."*  
+=======
+   > *"I was coming at 9:30am but the goods were gone. Taken by my neighbor"*  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
 
-3. **Friction Point 3 — Kutabona reviews (No Ratings/Trust)**  
+3. **Friction Point 3 — No Ratings/Trust**  
    New customers afraid to buy from unfamiliar vendors.  
    > *"I don't know if they're good. I need to know what people who've bought from them say."*  
    
@@ -65,7 +85,11 @@ This field research documents real observations and interviews conducted indepen
    
 
 ## Member 3 — Research Session
+<<<<<<< HEAD:field_research.md
 **Timestamp:** 2026-03-24 | 10:00 – 10:30 AM  
+=======
+**Timestamp:** 2026-03-27 | 11:00 – 11:30 AM  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
 **Location:** Remera Trading Center
 
 ### Observations
@@ -77,7 +101,11 @@ This field research documents real observations and interviews conducted indepen
    Customers with disabilities or far from market have no option to get goods delivered.  
    > *"Nobody brings things to my home. I have to come every day."*  
 
+<<<<<<< HEAD:field_research.md
 3. **Friction Point 3 — Price changes**  
+=======
+3. **Friction Point 3 — Price information**  
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
    Prices change seasonally but buyers have no way to track this.  
    > *"Avocado is 300 RWF in season, 800 in dry season — I don't know when to buy."*  
 
@@ -111,4 +139,9 @@ After analyzing all findings, the team identified **3 recurring themes** across 
 2. **Device Constraint** — Target users have entry-level Android devices (2–3GB RAM); Flutter app must be lightweight and performant.
 3. **Payment Constraint** — Primary payment method is MTN MoMo / Airtel Money; app must integrate with local mobile money APIs or simulate integration.
 
+<<<<<<< HEAD:field_research.md
 * This data is authentic, collected in-field by team members.*
+=======
+
+*This data is authentic, collected in-field by team members.*
+>>>>>>> e3034c9 (mini-capstone-part-a-d):docs/field_research.md
