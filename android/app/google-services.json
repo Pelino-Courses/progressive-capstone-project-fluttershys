@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "758415269244",
+    "project_id": "frutella-app",
+    "storage_bucket": "frutella-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758415269244:android:54310bc21ae4664ce5d8f9",
+        "android_client_info": {
+          "package_name": "com.example.sukaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfrRdW2Dx993eDBHnsZ77UjVWYf9JjGb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

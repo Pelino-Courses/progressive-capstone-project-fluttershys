@@ -1,36 +1,64 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'screens/home_page.dart';
+import 'package:provider/provider.dart';
 
-// Global authentication state - Simple boolean flags
-bool isLoggedIn = false;
-bool isAdmin = false;
+import 'providers/app_state.dart';
+import 'screens/auth/auth_gate.dart';
+import 'services/mock_services.dart';
+import 'theme/app_theme.dart';
 
-// Global fruits data
-List<Fruit> globalFruits = [
-  Fruit(id: '1', name: 'Passion Fruit', price: 1200, emoji: '🍎'),
-  Fruit(id: '2', name: 'Kigali Bananas', price: 800, emoji: '🍌'),
-  Fruit(id: '3', name: 'Fresh Mangoes', price: 1500, emoji: '🥭'),
-  Fruit(id: '4', name: 'Organic Oranges', price: 900, emoji: '🍊'),
-  Fruit(id: '5', name: 'Strawberries', price: 2000, emoji: '🍓'),
-  Fruit(id: '6', name: 'Watermelon', price: 1800, emoji: '🍉'),
-];
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() => runApp(const FrutellaApp());
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    if (kDebugMode) {
+      debugPrint('FlutterError: ${details.exceptionAsString()}');
+    }
+  };
+
+  ErrorWidget.builder = (details) {
+    return Material(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            'Something went wrong while building the UI.\n${details.exceptionAsString()}',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  };
+
+  final mockServices = await MockServicesFactory.create();
+  runApp(FrutellaApp(mockServices: mockServices));
+}
 
 class FrutellaApp extends StatelessWidget {
-  const FrutellaApp({super.key});
+  const FrutellaApp({super.key, required this.mockServices});
+
+  final MockServices mockServices;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Frutella',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.orange,
-        appBarTheme: const AppBarTheme(elevation: 2, centerTitle: true),
+    return ChangeNotifierProvider(
+      create: (_) => AppState(
+        authService: mockServices.authService,
+        productService: mockServices.productService,
+        feedbackService: mockServices.feedbackService,
+        orderService: mockServices.orderService,
+        adminService: mockServices.adminService,
+        firestore: mockServices.firestore,
       ),
-      home: const HomePage(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Frutella',
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        themeMode: ThemeMode.system,
+        home: const AuthGate(),
+      ),
     );
   }
 }
