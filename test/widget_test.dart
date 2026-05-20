@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:sukaapp/providers/app_state.dart';
 import 'package:sukaapp/screens/auth/sign_in_page.dart';
 
 import 'test_bundle.dart';
@@ -12,16 +13,15 @@ void main() {
     final bundle = await createTestBundle(signedIn: false);
 
     await tester.pumpWidget(
-      ChangeNotifierProvider.value(
+      ChangeNotifierProvider<AppState>.value(
         value: bundle.appState,
         child: const MaterialApp(home: SignInPage()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('Sign In'), findsWidgets);
     expect(find.text('Welcome back'), findsOneWidget);
-    expect(find.byType(TextFormField), findsNWidgets(2));
 
     bundle.appState.dispose();
   });

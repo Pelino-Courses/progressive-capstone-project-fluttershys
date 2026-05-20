@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import '../models/cart_item.dart';
@@ -54,6 +56,30 @@ class CartService extends ChangeNotifier {
   void clear() {
     if (_items.isEmpty) return;
     _items.clear();
+    notifyListeners();
+  }
+
+  String toJson() {
+    return jsonEncode([
+      for (final item in items)
+        {'productId': item.product.id, 'quantity': item.quantity},
+    ]);
+  }
+
+  void loadFromJson(
+    List<dynamic> list, {
+    required Product? Function(String productId) productResolver,
+  }) {
+    _items.clear();
+    for (final raw in list) {
+      final map = raw as Map<String, dynamic>;
+      final productId = map['productId'] as String? ?? '';
+      final quantity = (map['quantity'] as num?)?.toInt() ?? 1;
+      final product = productResolver(productId);
+      if (product != null) {
+        _items[productId] = CartItem(product: product, quantity: quantity);
+      }
+    }
     notifyListeners();
   }
 }

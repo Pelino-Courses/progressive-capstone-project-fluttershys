@@ -41,8 +41,7 @@ class LocalSeedProduct {
 }
 
 class LocalSeedData {
-  /// Product photos: real subject-matching images (Wikimedia Commons). Do not use
-  /// picsum-style placeholders — their "seed" only affects random selection, not the subject.
+  /// Product images are bundled under assets/images/products/ (see LocalDataStore).
   static const LocalSeedAccount demoBuyer = LocalSeedAccount(
     uid: 'user-1',
     email: 'demo@frutella.test',
@@ -91,8 +90,7 @@ class LocalSeedData {
       name: 'Fresh Mangoes',
       category: 'Fruits',
       price: 1500,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/9/90/Mango_-_single.jpg',
+      imageUrl: 'assets/images/products/mango.jpg',
       isAvailable: true,
       popularity: 5,
     ),
@@ -103,8 +101,7 @@ class LocalSeedData {
       name: 'Ripe Avocados',
       category: 'Fruits',
       price: 2000,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/c/c9/Persea_americana_fruit_2.jpg',
+      imageUrl: 'assets/images/products/avocado.jpg',
       isAvailable: true,
       popularity: 4,
     ),
@@ -115,8 +112,7 @@ class LocalSeedData {
       name: 'Fresh Tomatoes (1kg)',
       category: 'Vegetables',
       price: 800,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/8/88/Bright_red_tomato_and_cross_section02.jpg',
+      imageUrl: 'assets/images/products/tomato.jpg',
       isAvailable: true,
       popularity: 3,
     ),
@@ -127,8 +123,7 @@ class LocalSeedData {
       name: 'Bell Peppers (Mixed)',
       category: 'Vegetables',
       price: 1200,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/e/e5/Bell_peppers_in_basket.jpg',
+      imageUrl: 'assets/images/products/pepper.jpg',
       isAvailable: false,
       popularity: 2,
     ),
@@ -139,8 +134,7 @@ class LocalSeedData {
       name: 'Cassava (2kg)',
       category: 'Tubers',
       price: 1800,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/2/26/Yuca_root.jpg',
+      imageUrl: 'assets/images/products/cassava.jpg',
       isAvailable: true,
       popularity: 4,
     ),
@@ -151,8 +145,7 @@ class LocalSeedData {
       name: 'Sweet Potatoes (2kg)',
       category: 'Tubers',
       price: 1600,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/5/59/Sweet_potato_pile.jpg',
+      imageUrl: 'assets/images/products/potato.jpg',
       isAvailable: true,
       popularity: 3,
     ),
@@ -163,8 +156,7 @@ class LocalSeedData {
       name: 'Bananas (Bunch)',
       category: 'Fruits',
       price: 1100,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg',
+      imageUrl: 'assets/images/products/banana.jpg',
       isAvailable: true,
       popularity: 5,
     ),
@@ -175,8 +167,7 @@ class LocalSeedData {
       name: 'Carrots (1kg)',
       category: 'Vegetables',
       price: 900,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/a/a2/Vegetable-Carrot-Bundle-wGreenStalk-Bag-Covers.jpg',
+      imageUrl: 'assets/images/products/carrot.jpg',
       isAvailable: true,
       popularity: 3,
     ),

@@ -1,15 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/app_user.dart';
+import '../../models/order.dart';
 import '../../models/product.dart';
 import '../../providers/app_state.dart';
+import '../../widgets/product_image.dart';
 
 class AdminConsolePage extends StatelessWidget {
-  const AdminConsolePage({super.key, this.initialTabIndex = 0});
-
-  /// 0 = Users, 1 = All products, 2 = Campaigns
-  final int initialTabIndex;
+  const AdminConsolePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +19,125 @@ class AdminConsolePage extends StatelessWidget {
       );
     }
 
-    final tabIndex = initialTabIndex.clamp(0, 2);
+    final products = appState.store.products;
+    final orders = appState.store.orders;
+    final users = appState.store.users;
+    final vendors = users.where((u) => u.isVendor).length;
+    final buyers = users.where((u) => u.isBuyer).length;
+    final lowStock = products.where((p) => p.stockQuantity < 10).length;
 
     return DefaultTabController(
-      length: 3,
-      initialIndex: tabIndex,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Admin Console'),
-          bottom: const TabBar(
+      length: 4,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Platform control',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _StatCard(
+                      icon: Icons.people_outline,
+                      label: 'Sellers',
+                      value: '$vendors',
+                    ),
+                    _StatCard(
+                      icon: Icons.person_outline,
+                      label: 'Customers',
+                      value: '$buyers',
+                    ),
+                    _StatCard(
+                      icon: Icons.inventory_2_outlined,
+                      label: 'Products',
+                      value: '${products.length}',
+                    ),
+                    _StatCard(
+                      icon: Icons.receipt_long_outlined,
+                      label: 'Orders',
+                      value: '${orders.length}',
+                    ),
+                    _StatCard(
+                      icon: Icons.warning_amber_outlined,
+                      label: 'Low stock',
+                      value: '$lowStock',
+                      highlight: lowStock > 0,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const TabBar(
+            isScrollable: true,
             tabs: [
               Tab(text: 'Users'),
-              Tab(text: 'All Products'),
-              Tab(text: 'Campaigns'),
+              Tab(text: 'Products'),
+              Tab(text: 'Orders'),
+              Tab(text: 'Broadcast'),
             ],
           ),
-        ),
-        body: const TabBarView(
-          children: [_UsersTab(), _AllProductsTab(), _CampaignTab()],
+          const Expanded(
+            child: TabBarView(
+              children: [
+                _UsersTab(),
+                _ProductsTab(),
+                _OrdersTab(),
+                _CampaignTab(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.highlight = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final bool highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      color: highlight ? scheme.errorContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 22),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(label, style: Theme.of(context).textTheme.bodySmall),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -49,53 +149,158 @@ class _UsersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: context.read<AppState>().firestore.collection('users').snapshots(),
+    return StreamBuilder<List<AppUser>>(
+      stream: context.read<AppState>().store.usersStream,
+      initialData: context.read<AppState>().store.users,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final docs = snapshot.data?.docs ?? const [];
-
+        final users = snapshot.data ?? const <AppUser>[];
         return ListView.builder(
           padding: const EdgeInsets.all(12),
-          itemCount: docs.length,
+          itemCount: users.length,
           itemBuilder: (context, index) {
-            final data = docs[index].data();
-            final uid = (data['uid'] as String?) ?? docs[index].id;
-            final role = (data['role'] as String?) ?? 'buyer';
-
+            final user = users[index];
             return Card(
               child: ListTile(
-                title: Text((data['displayName'] as String?) ?? 'Unknown'),
-                subtitle: Text((data['email'] as String?) ?? 'No email'),
-                trailing: DropdownButton<String>(
-                  value: role == 'user' ? 'buyer' : role,
-                  items: const [
-                    DropdownMenuItem(value: 'buyer', child: Text('buyer')),
-                    DropdownMenuItem(value: 'vendor', child: Text('vendor')),
-                    DropdownMenuItem(value: 'admin', child: Text('admin')),
-                  ],
-                  onChanged: (value) async {
-                    if (value == null) return;
-                    final appState = context.read<AppState>();
-                    final ok = await appState.setUserRole(
-                      targetUid: uid,
-                      role: value,
-                    );
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            ok
-                                ? 'Role updated for ${(data['displayName'] as String?) ?? uid}'
-                                : 'Role update failed',
-                          ),
-                        ),
-                      );
-                    }
-                  },
+                title: Text(user.displayName),
+                subtitle: Text(
+                  '${user.email}\nRole: ${user.role.label}${user.isSuspended ? ' • SUSPENDED' : ''}',
                 ),
+                isThreeLine: true,
+                trailing: SizedBox(
+                  width: 120,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: user.role.label,
+                        items: const [
+                          DropdownMenuItem(value: 'buyer', child: Text('buyer')),
+                          DropdownMenuItem(value: 'vendor', child: Text('vendor')),
+                          DropdownMenuItem(value: 'admin', child: Text('admin')),
+                        ],
+                        onChanged: (value) async {
+                          if (value == null) return;
+                          await context.read<AppState>().setUserRole(
+                            targetUid: user.uid,
+                            role: value,
+                          );
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await context.read<AppState>().setUserSuspended(
+                            targetUid: user.uid,
+                            suspended: !user.isSuspended,
+                          );
+                        },
+                        child: Text(user.isSuspended ? 'Unsuspend' : 'Suspend'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ProductsTab extends StatelessWidget {
+  const _ProductsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = context.read<AppState>();
+
+    return StreamBuilder<List<Product>>(
+      stream: appState.productService.streamAllProductsAdmin(),
+      initialData: appState.store.products,
+      builder: (context, snapshot) {
+        final items = snapshot.data ?? const <Product>[];
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            final product = items[index];
+            return Card(
+              child: ListTile(
+                leading: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: ProductImage(
+                    imageUrl: product.imageUrl,
+                    aspectRatio: 1,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                title: Text(product.name),
+                subtitle: Text(
+                  '${product.ownerName} • ${product.price.toStringAsFixed(0)} RWF\n'
+                  'Stock: ${product.stockQuantity} • ${product.isApproved ? 'Approved' : 'Pending'}',
+                ),
+                isThreeLine: true,
+                trailing: Wrap(
+                  spacing: 4,
+                  children: [
+                    IconButton(
+                      tooltip: product.isApproved ? 'Reject' : 'Approve',
+                      onPressed: () => appState.setProductApproval(
+                        product.id,
+                        !product.isApproved,
+                      ),
+                      icon: Icon(
+                        product.isApproved ? Icons.block : Icons.check_circle,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Delete',
+                      onPressed: () => appState.productService.deleteProduct(
+                        productId: product.id,
+                        productOwnerId: product.ownerId,
+                        isAdmin: true,
+                        currentUserId: appState.currentUserId,
+                      ),
+                      icon: const Icon(Icons.delete_outline),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _OrdersTab extends StatelessWidget {
+  const _OrdersTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<AppOrder>>(
+      stream: context.read<AppState>().orderService.streamAllOrders(),
+      initialData: context.read<AppState>().store.orders,
+      builder: (context, snapshot) {
+        final orders = snapshot.data ?? const <AppOrder>[];
+        if (orders.isEmpty) {
+          return const Center(child: Text('No platform orders yet.'));
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: orders.length,
+          itemBuilder: (context, index) {
+            final order = orders[index];
+            return Card(
+              child: ListTile(
+                title: Text(order.productName),
+                subtitle: Text(
+                  '${order.buyerEmail}\nQty ${order.quantity} • ${order.totalPrice.toStringAsFixed(0)} RWF',
+                ),
+                trailing: Chip(label: Text(order.status)),
               ),
             );
           },
@@ -129,8 +334,8 @@ class _CampaignTabState extends State<_CampaignTab> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 700),
-        child: SingleChildScrollView(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
@@ -138,32 +343,22 @@ class _CampaignTabState extends State<_CampaignTab> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Broadcast Campaign Notification',
+                  'Broadcast to all users',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _titleCtrl,
                   decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Title is required';
-                    }
-                    return null;
-                  },
+                  validator: (v) =>
+                      v == null || v.trim().isEmpty ? 'Required' : null,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: _bodyCtrl,
                   minLines: 3,
                   maxLines: 5,
-                  decoration: const InputDecoration(labelText: 'Body'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Message body is required';
-                    }
-                    return null;
-                  },
+                  decoration: const InputDecoration(labelText: 'Message'),
                 ),
                 const SizedBox(height: 16),
                 FilledButton.icon(
@@ -171,7 +366,6 @@ class _CampaignTabState extends State<_CampaignTab> {
                       ? null
                       : () async {
                           if (!_formKey.currentState!.validate()) return;
-
                           setState(() => _sending = true);
                           final ok = await context
                               .read<AppState>()
@@ -181,95 +375,24 @@ class _CampaignTabState extends State<_CampaignTab> {
                               );
                           if (!mounted) return;
                           setState(() => _sending = false);
-
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                 ok
-                                    ? 'Campaign sent successfully.'
-                                    : 'Campaign send failed.',
+                                    ? 'Campaign sent to all users (simulated).'
+                                    : 'Send failed',
                               ),
                             ),
                           );
                         },
-                  icon: const Icon(Icons.campaign),
-                  label: Text(_sending ? 'Sending...' : 'Send Campaign'),
+                  icon: const Icon(Icons.campaign_outlined),
+                  label: Text(_sending ? 'Sending...' : 'Send broadcast'),
                 ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _AllProductsTab extends StatelessWidget {
-  const _AllProductsTab();
-
-  @override
-  Widget build(BuildContext context) {
-    final appState = context.read<AppState>();
-
-    return StreamBuilder<List<Product>>(
-      stream: appState.productService.streamAllProducts(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final items = snapshot.data ?? const <Product>[];
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(12),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final product = items[index];
-            return Card(
-              child: ListTile(
-                title: Text(product.name),
-                subtitle: Text(
-                  'Owner: ${product.ownerName} • ${product.price.toStringAsFixed(0)} RWF',
-                ),
-                trailing: Wrap(
-                  spacing: 4,
-                  children: [
-                    IconButton(
-                      tooltip: product.isAvailable ? 'Disable' : 'Enable',
-                      onPressed: () async {
-                        final updated = product.copyWith(
-                          isAvailable: !product.isAvailable,
-                        );
-                        await appState.productService.updateProduct(
-                          product: updated,
-                          isAdmin: true,
-                          currentUserId: appState.currentUserId,
-                        );
-                      },
-                      icon: Icon(
-                        product.isAvailable
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: 'Delete',
-                      onPressed: () async {
-                        await appState.productService.deleteProduct(
-                          productId: product.id,
-                          productOwnerId: product.ownerId,
-                          isAdmin: true,
-                          currentUserId: appState.currentUserId,
-                        );
-                      },
-                      icon: const Icon(Icons.delete_outline),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

@@ -18,7 +18,7 @@ class LocalDataStore {
   static const _keyOrders = 'frutella_orders_v1';
   static const _keySessionUid = 'frutella_session_uid';
   static const _keyCart = 'frutella_cart_v1';
-  static const _keyInitialized = 'frutella_initialized_v1';
+  static const _keyInitialized = 'frutella_initialized_v2';
   static const _keyFavoritesPrefix = 'frutella_favorites_';
   static const _keySearchPrefix = 'frutella_search_';
   static const _keyRecentPrefix = 'frutella_recent_';

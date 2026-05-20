@@ -1,114 +1,142 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
+import '../data/local_data_store.dart';
 import '../models/app_user.dart';
 import '../models/product.dart';
-import '../services/admin_service.dart';
-import '../services/auth_service.dart';
+import '../services/app_services.dart';
 import '../services/cart_service.dart';
-import '../services/feedback_service.dart';
-import '../services/order_service.dart';
-import '../services/product_service.dart';
+import '../services/local_admin_service.dart';
+import '../services/local_feedback_service.dart';
+import '../services/local_order_service.dart';
+import '../services/local_product_service.dart';
 
 class AppState extends ChangeNotifier {
-  AppState({
-    AuthService? authService,
-    ProductService? productService,
-    FeedbackService? feedbackService,
-    OrderService? orderService,
-    AdminService? adminService,
-    CartService? cartService,
-    FirebaseFirestore? firestore,
-  }) : _authService = authService ?? AuthService(),
-       _productService = productService ?? ProductService(),
-       _feedbackService = feedbackService ?? FeedbackService(),
-       _orderService = orderService ?? OrderService(),
-       _adminService = adminService ?? AdminService(),
-       _firestore = firestore ?? FirebaseFirestore.instance,
-       cartService = cartService ?? CartService() {
-    _authSub = _authService.authStateChanges().listen(_onAuthChanged);
+  AppState({required AppServices services, CartService? cart})
+    : store = services.store,
+      productService = services.productService,
+      orderService = services.orderService,
+      feedbackService = services.feedbackService,
+      adminService = services.adminService,
+      cartService = cart ?? CartService() {
     this.cartService.addListener(_onCartChanged);
+    _sessionSub = store.sessionStream.listen(_onSessionChanged);
+    _init();
   }
 
-  final AuthService _authService;
-  final ProductService _productService;
-  final FeedbackService _feedbackService;
-  final OrderService _orderService;
-  final AdminService _adminService;
-  final FirebaseFirestore _firestore;
+  final LocalDataStore store;
+  final LocalProductService productService;
+  final LocalOrderService orderService;
+  final LocalFeedbackService feedbackService;
+  final LocalAdminService adminService;
   final CartService cartService;
 
-  FirebaseFirestore get firestore => _firestore;
+  StreamSubscription<AppUser?>? _sessionSub;
 
-  StreamSubscription<User?>? _authSub;
-  StreamSubscription<AppUser?>? _profileSub;
-
-  User? firebaseUser;
   AppUser? profile;
   bool isLoading = true;
   String? errorMessage;
-  bool _pendingOpenCart = false;
+  int shellTabRequest = 0;
+  Set<String> _favoriteIds = {};
 
-  ProductService get productService => _productService;
-  OrderService get orderService => _orderService;
-
-  String get currentUserId => firebaseUser?.uid ?? '';
-  bool get isAuthenticated => firebaseUser != null;
+  String get currentUserId => profile?.uid ?? '';
+  bool get isAuthenticated => profile != null;
   bool get isAdmin => profile?.isAdmin ?? false;
   bool get isVendor => profile?.isVendor ?? false;
   bool get isBuyer => profile?.isBuyer ?? true;
   int get cartItemCount => cartService.itemCount;
 
-  /// Switch to the cart tab in the current role dashboard (handled by each shell).
-  void requestOpenCart() {
-    _pendingOpenCart = true;
+  Future<void> _init() async {
+    await _loadCartFromDisk();
+    profile = store.sessionUser;
+    if (profile != null) {
+      await _loadFavorites();
+    }
+    isLoading = false;
     notifyListeners();
   }
 
-  bool get hasPendingOpenCart => _pendingOpenCart;
-
-  /// Returns true once when the user asked to open the cart; clears the flag.
-  bool takePendingOpenCart() {
-    if (!_pendingOpenCart) return false;
-    _pendingOpenCart = false;
-    return true;
+  void openCartTab() {
+    shellTabRequest = 1;
+    notifyListeners();
   }
 
-  void _onCartChanged() => notifyListeners();
+  void clearShellTabRequest() {
+    if (shellTabRequest == 0) return;
+    shellTabRequest = 0;
+  }
 
-  Future<void> _onAuthChanged(User? user) async {
-    firebaseUser = user;
+  void _onCartChanged() {
+    _persistCart();
+    notifyListeners();
+  }
+
+  Future<void> _onSessionChanged(AppUser? user) async {
+    profile = user;
     errorMessage = null;
-
-    await _profileSub?.cancel();
     if (user == null) {
-      profile = null;
-      cartService.clear();
-      isLoading = false;
-      notifyListeners();
-      return;
+      _favoriteIds = {};
+    } else {
+      await _loadFavorites();
+      await _loadCartFromDisk();
     }
-
-    _profileSub = _authService.userProfileStream(user.uid).listen((nextProfile) {
-      profile = nextProfile;
-      isLoading = false;
-      notifyListeners();
-    });
+    isLoading = false;
+    notifyListeners();
   }
+
+  Future<void> _loadCartFromDisk() async {
+    final raw = await store.loadCartJson();
+    if (raw == null || raw.isEmpty) return;
+    try {
+      final list = jsonDecode(raw) as List;
+      cartService.loadFromJson(
+        list,
+        productResolver: (id) {
+          for (final p in store.products) {
+            if (p.id == id) return p;
+          }
+          return null;
+        },
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _persistCart() async {
+    await store.saveCartJson(cartService.toJson());
+  }
+
+  Future<void> _loadFavorites() async {
+    final uid = currentUserId;
+    if (uid.isEmpty) return;
+    _favoriteIds = (await store.loadFavoriteIds(uid)).toSet();
+  }
+
+  bool isFavorite(String productId) => _favoriteIds.contains(productId);
+
+  Future<void> toggleFavorite(String productId) async {
+    final uid = currentUserId;
+    if (uid.isEmpty) return;
+    await store.toggleFavorite(uid, productId);
+    await _loadFavorites();
+    notifyListeners();
+  }
+
+  List<Product> get favoriteProducts =>
+      store.productsByIds(_favoriteIds.toList());
 
   Future<bool> signIn({required String email, required String password}) async {
     try {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
-
-      await _authService.signIn(email: email, password: password);
+      await store.signIn(email: email, password: password);
+      isLoading = false;
+      notifyListeners();
       return true;
-    } on FirebaseAuthException catch (e) {
-      errorMessage = _friendlyAuthMessage(e);
+    } on AuthException catch (e) {
+      errorMessage = e.message;
       isLoading = false;
       notifyListeners();
       return false;
@@ -129,15 +157,12 @@ class AppState extends ChangeNotifier {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
-
-      await _authService.signUp(
-        email: email,
-        password: password,
-        displayName: name,
-      );
+      await store.signUp(name: name, email: email, password: password);
+      isLoading = false;
+      notifyListeners();
       return true;
-    } on FirebaseAuthException catch (e) {
-      errorMessage = _friendlyAuthMessage(e);
+    } on AuthException catch (e) {
+      errorMessage = e.message;
       isLoading = false;
       notifyListeners();
       return false;
@@ -151,49 +176,44 @@ class AppState extends ChangeNotifier {
 
   Future<void> signOut() async {
     cartService.clear();
-    await _authService.signOut();
+    await store.saveCartJson(null);
+    await store.signOut();
   }
 
-  void addToCart(Product product, {int quantity = 1}) {
-    cartService.add(product, quantity: quantity);
+  Future<void> updateProfile({String? displayName, String? avatarPath}) async {
+    final user = profile;
+    if (user == null) return;
+    final updated = user.copyWith(
+      displayName: displayName ?? user.displayName,
+      avatarPath: avatarPath ?? user.avatarPath,
+    );
+    await store.updateUser(updated);
   }
+
+  /// Guest add-to-cart: returns false and caller shows sign-in prompt.
+  bool tryAddToCart(Product product, {int quantity = 1}) {
+    if (!isAuthenticated) return false;
+    cartService.add(product, quantity: quantity);
+    return true;
+  }
+
 
   Future<bool> checkoutCart() async {
-    final user = firebaseUser;
+    final user = profile;
     if (user == null || cartService.items.isEmpty) return false;
 
     try {
       for (final item in cartService.items) {
-        await _orderService.placeOrder(
+        await orderService.placeOrder(
           buyerId: user.uid,
-          buyerEmail: user.email ?? '',
+          buyerEmail: user.email,
           product: item.product,
           quantity: item.quantity,
         );
       }
       cartService.clear();
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  Future<bool> placeOrder({
-    required Product product,
-    required int quantity,
-    String? note,
-  }) async {
-    final user = firebaseUser;
-    if (user == null) return false;
-
-    try {
-      await _orderService.placeOrder(
-        buyerId: user.uid,
-        buyerEmail: user.email ?? '',
-        product: product,
-        quantity: quantity,
-        note: note,
-      );
+      await _persistCart();
+      store.refreshStreams();
       return true;
     } catch (_) {
       return false;
@@ -201,13 +221,12 @@ class AppState extends ChangeNotifier {
   }
 
   Future<bool> submitFeedback(String message) async {
-    final user = firebaseUser;
+    final user = profile;
     if (user == null) return false;
-
     try {
-      await _feedbackService.submitFeedback(
+      await feedbackService.submitFeedback(
         userId: user.uid,
-        email: user.email ?? '',
+        email: user.email,
         message: message,
       );
       return true;
@@ -221,7 +240,31 @@ class AppState extends ChangeNotifier {
     required String role,
   }) async {
     try {
-      await _adminService.setUserRole(targetUid: targetUid, role: role);
+      await adminService.setUserRole(targetUid: targetUid, role: role);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> setUserSuspended({
+    required String targetUid,
+    required bool suspended,
+  }) async {
+    try {
+      await adminService.setUserSuspended(
+        targetUid: targetUid,
+        suspended: suspended,
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> setProductApproval(String productId, bool approved) async {
+    try {
+      await productService.setProductApproval(productId, approved);
       return true;
     } catch (_) {
       return false;
@@ -233,35 +276,35 @@ class AppState extends ChangeNotifier {
     required String body,
   }) async {
     try {
-      await _adminService.sendCampaign(title: title, body: body);
+      await adminService.sendCampaign(title: title, body: body);
       return true;
     } catch (_) {
       return false;
     }
   }
 
-  String _friendlyAuthMessage(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'email-already-in-use':
-        return 'That email is already registered.';
-      case 'invalid-email':
-        return 'Please enter a valid email address.';
-      case 'weak-password':
-        return 'Password is too weak. Use at least 6 characters.';
-      case 'operation-not-allowed':
-        return 'Email/password sign-in is not enabled in Firebase.';
-      case 'user-not-found':
-      case 'wrong-password':
-        return 'Incorrect email or password.';
-      default:
-        return e.message ?? 'Authentication failed.';
-    }
+  Future<void> recordProductView(String productId) async {
+    final uid = currentUserId;
+    if (uid.isEmpty) return;
+    await store.recordProductView(uid, productId);
+  }
+
+  Future<void> addSearchTerm(String term) async {
+    final uid = currentUserId;
+    if (uid.isEmpty) return;
+    await store.addSearchTerm(uid, term);
+  }
+
+  Future<List<Product>> loadRecentlyViewedProducts() async {
+    final uid = currentUserId;
+    if (uid.isEmpty) return const [];
+    final ids = await store.loadRecentlyViewed(uid);
+    return store.productsByIds(ids);
   }
 
   @override
   void dispose() {
-    _authSub?.cancel();
-    _profileSub?.cancel();
+    _sessionSub?.cancel();
     cartService.removeListener(_onCartChanged);
     super.dispose();
   }

@@ -1,17 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sukaapp/data/local_data_store.dart';
 import 'package:sukaapp/services/local_seed_data.dart';
 
 import 'test_bundle.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  setUp(() async {
-    SharedPreferences.setMockInitialValues({});
-    await LocalDataStore.instance.resetForTests();
-  });
 
   test('local backend supports sign up and sign in', () async {
     final bundle = await createTestBundle(signedIn: false);

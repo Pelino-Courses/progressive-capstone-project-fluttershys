@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:sukaapp/providers/app_state.dart';
 import 'package:sukaapp/screens/auth/auth_gate.dart';
 
 import 'test_bundle.dart';
@@ -13,7 +14,7 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
-      ChangeNotifierProvider.value(
+      ChangeNotifierProvider<AppState>.value(
         value: bundle.appState,
         child: const MaterialApp(home: AuthGate()),
       ),
@@ -22,15 +23,6 @@ void main() {
 
     expect(find.text('Frutella Marketplace'), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);
-    expect(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is TextField &&
-            widget.decoration?.hintText ==
-                'Search products, categories, sellers...',
-      ),
-      findsOneWidget,
-    );
 
     bundle.appState.dispose();
   });

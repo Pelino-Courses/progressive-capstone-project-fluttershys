@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProductImage extends StatelessWidget {
@@ -22,20 +25,38 @@ class ProductImage extends StatelessWidget {
         borderRadius: borderRadius,
         child: ColoredBox(
           color: colorScheme.surfaceContainerHighest,
-          child: imageUrl == null || imageUrl!.trim().isEmpty
-              ? _placeholder(colorScheme)
-              : Image.network(
-                  imageUrl!,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return _shimmerPlaceholder(colorScheme);
-                  },
-                  errorBuilder: (_, _, _) => _placeholder(colorScheme),
-                ),
+          child: _buildImage(colorScheme),
         ),
       ),
     );
+  }
+
+  Widget _buildImage(ColorScheme colorScheme) {
+    final path = imageUrl?.trim();
+    if (path == null || path.isEmpty) {
+      return _placeholder(colorScheme);
+    }
+
+    if (path.startsWith('assets/')) {
+      return Image.asset(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _placeholder(colorScheme),
+      );
+    }
+
+    if (!kIsWeb && (path.startsWith('/') || path.contains(':\\'))) {
+      final file = File(path);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _placeholder(colorScheme),
+        );
+      }
+    }
+
+    return _placeholder(colorScheme);
   }
 
   Widget _placeholder(ColorScheme colorScheme) {
@@ -44,20 +65,6 @@ class ProductImage extends StatelessWidget {
         Icons.local_grocery_store_outlined,
         size: 40,
         color: colorScheme.onSurfaceVariant.withValues(alpha: 0.55),
-      ),
-    );
-  }
-
-  Widget _shimmerPlaceholder(ColorScheme colorScheme) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.surfaceContainerHighest,
-            colorScheme.surfaceContainerHigh,
-            colorScheme.surfaceContainerHighest,
-          ],
-        ),
       ),
     );
   }

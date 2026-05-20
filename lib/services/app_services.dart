@@ -23,6 +23,10 @@ class AppServices {
   static Future<AppServices> create() async {
     final store = LocalDataStore.instance;
     await store.init();
+    return fromStore(store);
+  }
+
+  static AppServices fromStore(LocalDataStore store) {
     return AppServices._(
       store: store,
       productService: LocalProductService(store),

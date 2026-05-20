@@ -4,31 +4,24 @@ import 'package:provider/provider.dart';
 import '../../models/order.dart';
 import '../../providers/app_state.dart';
 
-/// Incoming orders for products sold by the signed-in vendor (`sellerId`).
 class VendorOrdersPage extends StatelessWidget {
   const VendorOrdersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
+    final sellerId = appState.currentUserId;
 
     return StreamBuilder<List<AppOrder>>(
-      stream: appState.orderService.streamOrdersForSeller(appState.currentUserId),
+      stream: appState.orderService.streamOrdersForSeller(sellerId),
+      initialData: appState.store.orders
+          .where((o) => o.sellerId == sellerId)
+          .toList(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         final orders = snapshot.data ?? const <AppOrder>[];
         if (orders.isEmpty) {
           return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'No sales yet. When buyers order your listings, they appear here.',
-                textAlign: TextAlign.center,
-              ),
-            ),
+            child: Text('No customer orders yet for your listings.'),
           );
         }
 
@@ -38,18 +31,55 @@ class VendorOrdersPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final order = orders[index];
             return Card(
-              child: ListTile(
-                title: Text(order.productName),
-                subtitle: Text(
-                  'Buyer: ${order.buyerEmail}\n'
-                  'Qty ${order.quantity} • ${order.totalPrice.toStringAsFixed(0)} RWF\n'
-                  'Status: ${order.status}',
-                ),
-                isThreeLine: true,
-                trailing: Text(
-                  _formatDate(order.createdAt),
-                  textAlign: TextAlign.right,
-                  style: Theme.of(context).textTheme.bodySmall,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      order.productName,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Qty ${order.quantity} • ${order.totalPrice.toStringAsFixed(0)} RWF',
+                    ),
+                    Text('Buyer: ${order.buyerEmail}'),
+                    Text('Status: ${order.status}'),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        if (order.status == 'placed')
+                          FilledButton.tonal(
+                            onPressed: () => _update(
+                              context,
+                              order.id,
+                              'processing',
+                            ),
+                            child: const Text('Processing'),
+                          ),
+                        if (order.status == 'processing')
+                          FilledButton.tonal(
+                            onPressed: () => _update(
+                              context,
+                              order.id,
+                              'shipped',
+                            ),
+                            child: const Text('Shipped'),
+                          ),
+                        if (order.status == 'shipped')
+                          FilledButton(
+                            onPressed: () => _update(
+                              context,
+                              order.id,
+                              'delivered',
+                            ),
+                            child: const Text('Delivered'),
+                          ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             );
@@ -59,11 +89,12 @@ class VendorOrdersPage extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime value) {
-    final month = value.month.toString().padLeft(2, '0');
-    final day = value.day.toString().padLeft(2, '0');
-    final hour = value.hour.toString().padLeft(2, '0');
-    final minute = value.minute.toString().padLeft(2, '0');
-    return '${value.year}-$month-$day\n$hour:$minute';
+  Future<void> _update(BuildContext context, String id, String status) async {
+    await context.read<AppState>().orderService.updateOrderStatus(id, status);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Order marked as $status')),
+      );
+    }
   }
 }

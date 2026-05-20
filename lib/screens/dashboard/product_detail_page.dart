@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/product.dart';
 import '../../providers/app_state.dart';
+import '../../utils/auth_navigation.dart';
 import '../../widgets/product_image.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -14,9 +15,19 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appState = context.watch<AppState>();
+    final isFav = appState.isFavorite(product.id);
 
     return Scaffold(
-      appBar: AppBar(title: Text(product.name)),
+      appBar: AppBar(
+        title: Text(product.name),
+        actions: [
+          if (appState.isAuthenticated)
+            IconButton(
+              onPressed: () => appState.toggleFavorite(product.id),
+              icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
+            ),
+        ],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -38,35 +49,35 @@ class ProductDetailPage extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
+            if (product.description.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(product.description),
+            ],
             const SizedBox(height: 12),
             _infoRow('Seller', product.ownerName),
+            _infoRow('Stock', '${product.stockQuantity} units'),
             _infoRow(
               'Availability',
               product.isAvailable ? 'In stock' : 'Out of stock',
             ),
-            _infoRow('Popularity score', product.popularity.toString()),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: !product.isAvailable
                   ? null
                   : () {
-                      if (!appState.isAuthenticated) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Sign in to add items to your cart.'),
-                          ),
-                        );
+                      if (!appState.tryAddToCart(product)) {
+                        promptSignIn(context);
                         return;
                       }
-                      appState.addToCart(product);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${product.name} added to cart.')),
+                        SnackBar(
+                          content: Text('${product.name} added to cart.'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
                       );
                     },
               icon: const Icon(Icons.add_shopping_cart),
-              label: Text(
-                appState.isAuthenticated ? 'Add to cart' : 'Sign in to order',
-              ),
+              label: const Text('Add to cart'),
             ),
           ],
         ),
@@ -82,7 +93,10 @@ class ProductDetailPage extends StatelessWidget {
         children: [
           SizedBox(
             width: 110,
-            child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.w600)),
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
           Expanded(child: Text(value)),
         ],

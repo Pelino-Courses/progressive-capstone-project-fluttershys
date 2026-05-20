@@ -53,18 +53,6 @@ class OrderService {
         );
   }
 
-  /// Orders where this user is the seller (vendor dashboard).
-  Stream<List<AppOrder>> streamOrdersForSeller(String sellerId) {
-    return _orders
-        .where('sellerId', isEqualTo: sellerId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snap) =>
-              snap.docs.map((doc) => AppOrder.fromMap(doc.data())).toList(),
-        );
-  }
-
   Stream<List<AppOrder>> streamAllOrders() {
     return _orders
         .orderBy('createdAt', descending: true)

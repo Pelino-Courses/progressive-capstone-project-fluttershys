@@ -78,8 +78,8 @@ class ProductListLoadingView extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: 4,
-            separatorBuilder: (_, _) => const SizedBox(width: 12),
-            itemBuilder: (_, _) => const SizedBox(
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (_, __) => const SizedBox(
               width: 180,
               child: Card(child: LoadingSkeleton(borderRadius: 16)),
             ),

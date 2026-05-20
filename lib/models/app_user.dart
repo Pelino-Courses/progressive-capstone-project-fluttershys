@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 enum UserRole { buyer, vendor, admin }
 
 extension UserRoleX on UserRole {
@@ -34,6 +32,9 @@ class AppUser {
   final String displayName;
   final UserRole role;
   final DateTime createdAt;
+  final String password;
+  final bool isSuspended;
+  final String? avatarPath;
 
   const AppUser({
     required this.uid,
@@ -41,29 +42,57 @@ class AppUser {
     required this.displayName,
     required this.role,
     required this.createdAt,
+    this.password = '',
+    this.isSuspended = false,
+    this.avatarPath,
   });
 
   bool get isAdmin => role == UserRole.admin;
   bool get isVendor => role == UserRole.vendor;
   bool get isBuyer => role == UserRole.buyer;
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'email': email,
       'displayName': displayName,
       'role': role.label,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'createdAt': createdAt.toIso8601String(),
+      'password': password,
+      'isSuspended': isSuspended,
+      'avatarPath': avatarPath,
     };
   }
 
-  factory AppUser.fromMap(Map<String, dynamic> map) {
+  factory AppUser.fromJson(Map<String, dynamic> map) {
     return AppUser(
       uid: (map['uid'] as String?) ?? '',
       email: (map['email'] as String?) ?? '',
       displayName: (map['displayName'] as String?) ?? 'User',
       role: UserRoleX.fromString(map['role'] as String?),
-      createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt: DateTime.tryParse(map['createdAt'] as String? ?? '') ??
+          DateTime.now(),
+      password: (map['password'] as String?) ?? '',
+      isSuspended: (map['isSuspended'] as bool?) ?? false,
+      avatarPath: map['avatarPath'] as String?,
+    );
+  }
+
+  AppUser copyWith({
+    String? displayName,
+    UserRole? role,
+    bool? isSuspended,
+    String? avatarPath,
+  }) {
+    return AppUser(
+      uid: uid,
+      email: email,
+      displayName: displayName ?? this.displayName,
+      role: role ?? this.role,
+      createdAt: createdAt,
+      password: password,
+      isSuspended: isSuspended ?? this.isSuspended,
+      avatarPath: avatarPath ?? this.avatarPath,
     );
   }
 }

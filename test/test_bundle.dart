@@ -1,68 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sukaapp/data/local_data_store.dart';
 import 'package:sukaapp/providers/app_state.dart';
-import 'package:sukaapp/services/admin_service.dart';
-import 'package:sukaapp/services/auth_service.dart';
-import 'package:sukaapp/services/feedback_service.dart';
-import 'package:sukaapp/services/order_service.dart';
-import 'package:sukaapp/services/product_service.dart';
+import 'package:sukaapp/services/app_services.dart';
 
 class TestBundle {
-  TestBundle({required this.appState, required this.firestore});
+  TestBundle({required this.appState, required this.services});
 
   final AppState appState;
-  final FakeFirebaseFirestore firestore;
+  final AppServices services;
 }
 
 Future<TestBundle> createTestBundle({
   bool signedIn = true,
   bool isAdmin = false,
-  bool seedProduct = false,
 }) async {
-  final firestore = FakeFirebaseFirestore();
+  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
+  await LocalDataStore.instance.resetForTests();
 
-  const uid = 'user-1';
-  const email = 'user1@frutella.test';
-  const displayName = 'User One';
-
-  final auth = MockFirebaseAuth(
-    signedIn: signedIn,
-    mockUser: MockUser(uid: uid, email: email, displayName: displayName),
-  );
-
-  if (signedIn) {
-    await firestore.collection('users').doc(uid).set({
-      'uid': uid,
-      'email': email,
-      'displayName': displayName,
-      'role': isAdmin ? 'admin' : 'buyer',
-      'createdAt': Timestamp.now(),
-    });
+  if (isAdmin) {
+    await LocalDataStore.instance.signIn(
+      email: 'admin@frutella.test',
+      password: 'Admin123!',
+    );
+  } else if (signedIn) {
+    await LocalDataStore.instance.signIn(
+      email: 'demo@frutella.test',
+      password: 'Demo123!',
+    );
   }
 
-  if (seedProduct) {
-    await firestore.collection('products').doc('product-1').set({
-      'id': 'product-1',
-      'ownerId': 'seller-2',
-      'ownerName': 'Seller Two',
-      'name': 'Fresh Mangoes',
-      'category': 'Fruits',
-      'price': 1500.0,
-      'isAvailable': true,
-      'popularity': 3,
-      'createdAt': Timestamp.now(),
-    });
-  }
+  final services = AppServices.fromStore(LocalDataStore.instance);
+  final appState = AppState(services: services);
 
-  final appState = AppState(
-    authService: AuthService(auth: auth, firestore: firestore),
-    productService: ProductService(firestore: firestore),
-    feedbackService: FeedbackService(firestore: firestore),
-    orderService: OrderService(firestore: firestore),
-    adminService: AdminService.test(),
-    firestore: firestore,
-  );
-
-  return TestBundle(appState: appState, firestore: firestore);
+  return TestBundle(appState: appState, services: services);
 }

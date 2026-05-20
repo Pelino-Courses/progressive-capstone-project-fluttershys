@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/app_state.dart';
 import '../screens/dashboard/product_detail_page.dart';
+import '../utils/auth_navigation.dart';
 import 'product_image.dart';
 
 class ProductCard extends StatefulWidget {
@@ -43,6 +44,7 @@ class _ProductCardState extends State<ProductCard> {
           elevation: _hovered ? 4 : 1,
           child: InkWell(
             onTap: () {
+              appState.recordProductView(product.id);
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => ProductDetailPage(product: product),
@@ -129,11 +131,7 @@ class _ProductCardState extends State<ProductCard> {
                               ? null
                               : () => _onAddToCart(context, appState),
                           child: Text(
-                            !appState.isAuthenticated
-                                ? 'Sign in'
-                                : inCart
-                                ? 'In cart'
-                                : 'Add to cart',
+                            inCart ? 'In cart' : 'Add to cart',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: compact ? 11 : 13),
@@ -171,21 +169,21 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   void _onAddToCart(BuildContext context, AppState appState) {
-    if (!appState.isAuthenticated) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sign in to add items to your cart.')),
-      );
+    if (!appState.tryAddToCart(widget.product)) {
+      promptSignIn(context);
       return;
     }
 
-    appState.addToCart(widget.product);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${widget.product.name} added to cart.'),
-        action: SnackBarAction(
-          label: 'View cart',
-          onPressed: appState.requestOpenCart,
-        ),
+        behavior: SnackBarBehavior.floating,
+        action: appState.isAuthenticated
+            ? SnackBarAction(
+                label: 'View cart',
+                onPressed: appState.openCartTab,
+              )
+            : null,
       ),
     );
   }

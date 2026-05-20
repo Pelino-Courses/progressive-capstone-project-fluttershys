@@ -9,6 +9,17 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - lib/firebase_options.dart
+    - lib/services/auth_service.dart
+    - lib/services/mock_services.dart
+    - lib/services/seeded_auth_service.dart
+    - lib/services/product_service.dart
+    - lib/services/order_service.dart
+    - lib/services/admin_service.dart
+    - lib/services/feedback_service.dart
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

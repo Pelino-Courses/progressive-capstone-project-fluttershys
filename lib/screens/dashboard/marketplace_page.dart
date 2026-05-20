@@ -37,12 +37,20 @@ class _MarketplacePageState extends State<MarketplacePage> {
                   prefixIcon: Icon(Icons.search),
                   hintText: 'Search products, categories, sellers...',
                 ),
-                onChanged: (value) => setState(() => _searchQuery = value.trim().toLowerCase()),
+                onChanged: (value) {
+                  setState(() => _searchQuery = value.trim().toLowerCase());
+                  if (value.trim().isNotEmpty) {
+                    appState.addSearchTerm(value.trim());
+                  }
+                },
               ),
             ),
             Expanded(
               child: StreamBuilder<List<Product>>(
                 stream: appState.productService.streamAllProducts(),
+                initialData: appState.store.products
+                    .where((p) => p.isApproved)
+                    .toList(),
                 builder: (context, snapshot) {
                   return AsyncStateView<List<Product>>(
                     snapshot: snapshot,
@@ -50,9 +58,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                     emptyTitle: 'No products yet',
                     emptyMessage: widget.publicMode
                         ? 'Check back soon for fresh marketplace listings.'
-                        : (appState.isVendor || appState.isAdmin)
-                        ? 'Add your first product from Listings / My Products.'
-                        : 'No products match your search or filters.',
+                        : 'Add your first product from My Products.',
                     builder: (context, products) {
                       final categories = <String>{
                         'All',
@@ -102,7 +108,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: categories.length,
-                                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                                separatorBuilder: (_, __) => const SizedBox(width: 8),
                                 itemBuilder: (context, index) {
                                   final category = categories[index];
                                   return FilterChip(

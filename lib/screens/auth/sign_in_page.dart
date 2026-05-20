@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/app_state.dart';
+import '../../services/local_seed_data.dart';
 import 'sign_up_page.dart';
 
 class SignInPage extends StatefulWidget {
@@ -56,6 +57,11 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
+  void _fillDemo(LocalSeedAccount account) {
+    _emailCtrl.text = account.email;
+    _passwordCtrl.text = account.password;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,8 +82,30 @@ class _SignInPageState extends State<SignInPage> {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 8),
-                    const Text('Sign in to shop, sell, or manage the marketplace.'),
-                    const SizedBox(height: 24),
+                    const Text(
+                      'Sign in to shop, sell, or manage the marketplace.',
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ActionChip(
+                          label: const Text('Customer'),
+                          onPressed: () => _fillDemo(LocalSeedData.demoBuyer),
+                        ),
+                        ActionChip(
+                          label: const Text('Vendor'),
+                          onPressed: () =>
+                              _fillDemo(LocalSeedData.vendors.first),
+                        ),
+                        ActionChip(
+                          label: const Text('Admin'),
+                          onPressed: () => _fillDemo(LocalSeedData.admin),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     TextFormField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
