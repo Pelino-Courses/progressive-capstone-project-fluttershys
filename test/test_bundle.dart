@@ -33,6 +33,7 @@ Future<TestBundle> createTestBundle({
 
   final services = AppServices.fromStore(LocalDataStore.instance);
   final appState = AppState(services: services);
+  await appState.ready;
 
   return TestBundle(appState: appState, services: services);
 }

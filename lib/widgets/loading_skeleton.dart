@@ -26,7 +26,14 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
+    );
+    // Infinite repeat prevents pumpAndSettle in widget tests.
+    if (WidgetsBinding.instance.runtimeType.toString() !=
+        'TestWidgetsFlutterBinding') {
+      _controller.repeat(reverse: true);
+    } else {
+      _controller.value = 0.5;
+    }
   }
 
   @override

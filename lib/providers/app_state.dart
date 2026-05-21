@@ -34,6 +34,8 @@ class AppState extends ChangeNotifier {
   final CartService cartService;
 
   StreamSubscription<AppUser?>? _sessionSub;
+  final Completer<void> _ready = Completer<void>();
+  Future<void> get ready => _ready.future;
 
   AppUser? profile;
   bool isLoading = true;
@@ -56,6 +58,7 @@ class AppState extends ChangeNotifier {
     }
     isLoading = false;
     notifyListeners();
+    if (!_ready.isCompleted) _ready.complete();
   }
 
   void openCartTab() {

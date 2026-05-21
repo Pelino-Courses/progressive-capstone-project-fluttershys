@@ -19,7 +19,8 @@ void main() {
         child: const MaterialApp(home: AuthGate()),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Frutella Marketplace'), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);

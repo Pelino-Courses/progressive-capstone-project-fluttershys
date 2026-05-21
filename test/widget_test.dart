@@ -18,7 +18,8 @@ void main() {
         child: const MaterialApp(home: SignInPage()),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Sign In'), findsWidgets);
     expect(find.text('Welcome back'), findsOneWidget);
