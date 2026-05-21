@@ -2,7 +2,7 @@
 <<<<<<< HEAD
 # 🛒 SukaApp — *Your marketplace*
 =======
-# 🛒 SukaApp — *Isoko ryawe mu nteke zawe*
+# 🛒 SukaApp — *Isoko ryawe, mu ntoki zawe*
 >>>>>>> e3034c9 (mini-capstone-part-a-d)
 ### Your Market, In Your Hands
 
@@ -13,7 +13,7 @@
 
 ## 📋 Project Overview 
 
-SukaApp solves a real problem observed in Kigali's informal markets: buyers waste time and money because they can't see product availability, prices, or vendor trustworthiness before making a trip, while sellers lose customers because they lack affordable digital tools.
+SukaApp was developed in response to the inefficiencies commonly experienced within Kigali’s informal markets. Consumers frequently face uncertainty regarding product availability, pricing, and seller credibility before visiting a marketplace, resulting in wasted time and unnecessary expenses. Conversely, small-scale vendors often lack accessible and cost-effective digital solutions to showcase their products and connect with potential customers. SukaApp bridges this gap by offering a digital marketplace that promotes transparency, convenience, and trust, ultimately creating value for both buyers and sellers while supporting the digital transformation of local commerce.
 
 **Core Features (MVP):**
 1. 🔍 Product Discovery & Search
@@ -89,7 +89,7 @@ AI was used to help structure and draft documentation files. All field research,
 - `docs/DESIGN.md` contains the Mini-Capstone screen mockup plan and UI decisions.
 - `wireframes/sukaapp_wireframes.html` contains the current wireframe prototypes.
 - `docs/ASSIGNMENT.md` contains the assignment summary, submission instructions, and checklist.
-- Project demo video: https://www.youtube.com/watch?v=gxVwPk0cImU
+- Project demo video:https://youtu.be/_V3cvCwNHHI
 
 ---
 
