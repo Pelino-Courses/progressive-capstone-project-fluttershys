@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:sukaapp/providers/app_state.dart';
+import 'package:sukaapp/screens/auth/sign_in_page.dart';
+
+import 'test_bundle.dart';
+
+void main() {
+  testWidgets('sign-in screen renders without crashing', (
+    WidgetTester tester,
+  ) async {
+    final bundle = await createTestBundle(signedIn: false);
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<AppState>.value(
+        value: bundle.appState,
+        child: const MaterialApp(home: SignInPage()),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('Sign In'), findsWidgets);
+    expect(find.text('Welcome back'), findsOneWidget);
+
+    bundle.appState.dispose();
+  });
+}
